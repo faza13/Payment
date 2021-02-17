@@ -1,0 +1,14 @@
+{
+    "name": "faza/payment",
+    "description": "payment gateway xendit or midtran",
+    "authors": [
+        {
+            "name": "Faza",
+            "email": "fazaa.13@gmail.com"
+        }
+    ],
+    "require": {
+        "xendit/xendit-php": "2.*",
+        "midtrans/midtrans-php": "2.*"
+    }
+}
