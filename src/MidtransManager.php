@@ -8,6 +8,7 @@ use Faza13\Payment\Contract\PaymentInterface;
 
 class MidtransManager extends PaymentAbstract implements PaymentInterface
 {
+
     public function __construct($env, $serverKey, $clientKey)
     {
         // set config midtrans
@@ -46,14 +47,14 @@ class MidtransManager extends PaymentAbstract implements PaymentInterface
         return $this;
     }
 
-    public function setPaymentDetail($paymentDetail): MidtransManager
+    public function setOrderItems(array $items): MidtransManager
     {
-        $this->paymentDetail = $paymentDetail;
+        $this->items = $items;
         return $this;
     }
 
-    public function sendPayment($channel, $issuer)
+    public function send(string $type, string $issuer, $params = [])
     {
-        // TODO: Implement sendPayment() method.
+
     }
 }

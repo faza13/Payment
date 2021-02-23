@@ -10,8 +10,8 @@ interface PaymentInterface
 
     public function setOrderDetails($orderDetails);
 
-    public function setPaymentDetail($paymentDetail);
+    public function setOrderItems(array $items);
 
-    public function sendPayment();
+    public function send(string $type, string $issuer, array $params = []);
 
 }

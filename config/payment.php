@@ -3,7 +3,7 @@
     return [
         'env' => env('PAYMENT_DEFAULT'),
         'default' => env('PAYMENT_DEFAULT'),
-        'expiry_in' => env('PAYMENT_EXPIRY_IN', 4),
+        'expiry_in' => env('PAYMENT_EXPIRY_IN', 240), // in minutes
         'midtrans' => [
             'server_key' => env("MIDTRANS_SERVER_KEY"),
             'client_key' => env("MIDTRANS_CLIENT_KEY"),
