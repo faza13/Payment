@@ -1,14 +1,27 @@
 {
-    "name": "faza/payment",
+    "name": "faza13/payment",
     "description": "payment gateway xendit or midtran",
     "authors": [
         {
             "name": "Faza",
-            "email": "fazaa.13@gmail.com"
+            "email": "faza@mineral.com"
         }
     ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Faza13\\Payment\\": "src/"
+        }
+    },
     "require": {
         "xendit/xendit-php": "2.*",
         "midtrans/midtrans-php": "2.*"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Faza13\\Payment\\PaymentServiceProvider"
+            ]
+        }
     }
 }

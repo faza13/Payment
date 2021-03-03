@@ -4,10 +4,13 @@
 namespace Faza13\Payment;
 
 
-use Faza13\Payment\Contract\PaymentInterface;
+use Faza13\Payment\Contracts\OrderPaymentInterface;
+use Faza13\Payment\Contracts\PaymentInterface;
 use Illuminate\Support\Str;
 use Xendit\EWallets;
+use Xendit\Invoice;
 use Xendit\VirtualAccounts;
+use Xendit\Xendit;
 
 class XenditManager extends PaymentAbstract implements PaymentInterface
 {
@@ -20,54 +23,48 @@ class XenditManager extends PaymentAbstract implements PaymentInterface
         Xendit::setApiKey($secretKey);
     }
 
-    public function setCustomerInfo($customerInfo)
+    public function send($params = []): array
     {
-        $this->customerInfo = $customerInfo;
+//        $orderDetail = $order->getTransactionDetail();
+//        $customerInfo = $order->getCutomerDetail();
 
-        return $this;
-    }
-
-    public function setOrderDetails($orderDetails)
-    {
-        $this->orderDetails = $orderDetails;
-    }
-
-    public function setOrderItems(array $items)
-    {
-//        'items' => [
-//        [
-//            'id' => '123123',
-//            'name' => 'Phone Case',
-//            'price' => 1000000,
-//            'type' => 'Smartphone',
-//            'url' => 'http://example.com/phone/phone_case',
-//            'quantity' => 2
-//        ]
-//    ]
-
-    //        [
-//            'id' => $this->order_cid.'-shipping',
-//            'price' => $this->shipping_cost,
-//            'quantity' => 1,
-//            'name' => $this->shipping_service
+//        $params = [
+//            'external_id' => $orderDetail['order_id'],
+//            'payer_email' => $customerInfo['email'],
+//            'description' => 'Payment for order ' . $orderDetail['order_id'],
+//            'amount' => $orderDetail['gross_amount'],
+//            "payment_methods" => [$order->getIssuer()]
 //        ];
 
-//        is_single_use
+//        $result = Invoice::create($params);
+//
+//        return [
+//            'result' => $result,
+//            'transaction_id' => $result['id']
+//        ];
+        $method = Str::camel($this->paymentType);
 
-        $this->items = $items;
-        return $this;
-    }
-
-    public function send($type, $issuer, $params= [])
-    {
-
-        $method = Str::camel($type);
-
-        return $this->{$method}($issuer, $params);
+        return $this->{$method}($params);
     }
 
 
-    public function bankTransfer($issuer, $params= [])
+//    public function checkPayment(string $transId)
+//    {
+//        $result = Invoice::retrieve();
+//
+//        if(strtoupper($result['status']) == 'SETTLED')
+//        {
+//            $result['status'] == strtoupper('settlement');
+//        }
+//
+//        return [
+//            'status' => $result['status'],
+//            'result' => $result
+//        ];
+//    }
+
+
+    public function bankTransfer($params= [])
     {
         //        [
 //            "external_id" => "demo-1475804036622",
@@ -87,8 +84,8 @@ class XenditManager extends PaymentAbstract implements PaymentInterface
             $name = strtoupper($this->customerInfo['name']);
 
 
-        $xenditParams['external_id'] = $this->orderDetails['order_cid'];
-        $xenditParams['bank_code'] = $issuer;
+        $xenditParams['external_id'] = $this->orderDetails['order_id'];
+        $xenditParams['bank_code'] = $this->issuer;
         $xenditParams['name'] = trim($name);
         $xenditParams['amount'] = $this->orderDetails['gross_amount'];
 
@@ -100,27 +97,30 @@ class XenditManager extends PaymentAbstract implements PaymentInterface
         $result = VirtualAccounts::create($params);
         return [
             'va_namuber' => $result['account_number'],
+            'transaction_id' => $result[''],
             'resp' => $result
         ];
     }
 
-    public function ewallet($issuer, $params= [])
+    public function ewallet($params= [])
     {
-        $xenditParams['reference_id'] = $this->orderDetails['order_cid'];
+        $xenditParams['reference_id'] = $this->orderDetails['order_id'];
         $xenditParams['currency'] = 'IDR';
         $xenditParams['amount'] = $this->orderDetails['gross_amount'];
         $xenditParams['checkout_method'] = 'ONE_TIME_PAYMENT';
-        $xenditParams['channel_code'] = 'ID_' . strtoupper($issuer);
-        $xenditParams['channel_properties'] = strtoupper($issuer);
+        $xenditParams['channel_code'] = 'ID_' . strtoupper($this->issuer);
+        $xenditParams['channel_properties'] = strtoupper($this->issuer);
+        $xenditParams['ewallet_type'] = strtoupper($this->issuer);
 //        $xenditParams['channel_properties'] = strtoupper($issuer);
 
-        $mobile = preg_replace('/^0|^62/', '+62', $this->customerInfo['phone']);
+//        dd($this->customerInfo);
+        $mobile = str_replace("+", "", preg_replace('/^0|^62/', '', $this->customerInfo['phone']));
 
-        switch ($issuer)
+        switch ($this->issuer)
         {
             case 'ovo':
                 $xenditParams['channel_properties'] = [
-                    'mobile_number' => $mobile
+                    'mobile_number' => "+62" . $mobile
                 ];
                 break;
             default:
@@ -128,19 +128,49 @@ class XenditManager extends PaymentAbstract implements PaymentInterface
                 if(!$params['success_redirect_url'])
                     Throw new \InvalidArgumentException("success_redirect_url not set in params");
 
-
                 $xenditParams['channel_properties'] = [
                     'success_redirect_url' => $params['success_redirect_url']
                 ];
         }
 
-        $result = EWallets::create($xenditParams);
-
+        $result = EWallets::createEWalletCharge($xenditParams);
 
         return [
-
-            'resp' => $result,
+            'transaction_id' => $result['id'],
+            'result' => $result,
         ];
     }
 
+    public function checkPayment(string $transId)
+    {
+        $result = null;
+        $status = null;
+        switch ($this->paymentType)
+        {
+////            case 'bank_transfer':
+////                $result = V::getEWalletChargeStatus($transId);
+////                break;
+            case 'ewallet':
+                $result = EWallets::getEWalletChargeStatus($transId);
+                $status = $result['status'];
+                switch ($result['status'])
+                {
+                    case "SUCCEEDED":
+                        $status = "settlement";
+                        break;
+                    case "FAILED":
+                        $status = "cancel";
+                        break;
+                    default:
+                        $status = 'pending';
+                }
+
+                break;
+        }
+
+        return [
+            "status" => $status,
+            "result" => $result
+        ];
+    }
 }

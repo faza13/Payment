@@ -2,7 +2,7 @@
 
     return [
         'env' => env('PAYMENT_DEFAULT'),
-        'default' => env('PAYMENT_DEFAULT'),
+        'default' => env('PAYMENT_DEFAULT', 'xendit'),
         'expiry_in' => env('PAYMENT_EXPIRY_IN', 240), // in minutes
         'midtrans' => [
             'server_key' => env("MIDTRANS_SERVER_KEY"),
@@ -41,6 +41,11 @@
                         'images' => [],
                         'status' => env('MINDTRANS_gopay', false),
                     ],
+                ],
+                'qris' => [
+                    'title' => 'QRIS',
+                    'images' => [],
+                    'status' => env('MINDTRANS_QRIS', false),
                 ]
             ]
         ],
@@ -93,5 +98,11 @@
             'payment_type' => [
 
             ]
-        ]
+        ],
+        'stubs' => [
+            'filesystem' => [
+
+            ],
+            'path' => "Models/Traits",
+        ],
     ];

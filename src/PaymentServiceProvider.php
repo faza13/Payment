@@ -4,15 +4,33 @@
 namespace Faza13\Payment;
 
 
+//use Faza13\Payment\Contracts\PaymentInterface;
+use Faza13\Payment\Commands\PaymentCommand;
+use Faza13\Payment\Contracts\PaymentInterface;
 use Illuminate\Support\ServiceProvider;
 
 class PaymentServiceProvider extends ServiceProvider
 {
     public function boot(){
+
+        $this->mergeConfigFrom(__DIR__ . '/../config/payment.php', 'payment');
+
+
         $this->publishes([
             __DIR__ . '/config/payment.php' => $this->app->basePath('config/payment.php'),
         ]);
 
+        $this->app->bind('payment', PaymentInterface::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                PaymentCommand::class,
+            ]);
+        }
+
+//        $this->app->singleton(PaymentInterface::class, function ($app) {
+//            return new PaymentManager($app);
+//        });
     }
 
     /**
@@ -22,18 +40,11 @@ class PaymentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
-        $this->mergeConfigFrom(__DIR__ . '/../config/otp.php', 'otp');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
-        $this->app->singleton(OTPInterface::class, function ($app) {
-            switch ($app->make('config')->get('otp.default')) {
-                case 'firebase':
-                    return new OTPFirebase($app->make('config')->get('otp.firebase.api_key'));
-                default:
-                    throw new \RuntimeException("Unknown Stock Checker Service");
-            }
+        $this->app->singleton(PaymentInterface::class, function ($app) {
+            return new PaymentManager($app);
         });
+
+//        $this->app->bind(PaymentInterface::class, PaymentManager::class);
     }
 
     /**
@@ -43,6 +54,6 @@ class PaymentServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['otp'];
+        return ['payment'];
     }
 }

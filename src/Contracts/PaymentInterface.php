@@ -1,17 +1,13 @@
 <?php
 
-namespace Faza13\Payment\Contract;
+namespace Faza13\Payment\Contracts;
 
 
 interface PaymentInterface
 {
 
-    public function setCustomerInfo($customerInfo);
+    public function send($params = []);
 
-    public function setOrderDetails($orderDetails);
-
-    public function setOrderItems(array $items);
-
-    public function send(string $type, string $issuer, array $params = []);
+    public function checkPayment(string $transId);
 
 }

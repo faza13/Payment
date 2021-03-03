@@ -4,6 +4,7 @@
 namespace Faza13\Payment;
 
 
+use Faza13\Payment\Contracts\OrderPaymentInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Manager;
 
@@ -14,6 +15,8 @@ abstract class PaymentAbstract
     public $orderDetails;
 
     public $paymentType;
+
+    public $issuer;
 
     public $items;
 
@@ -35,6 +38,24 @@ abstract class PaymentAbstract
     {
 
         return Carbon::now()->addMinutes($this->expire);
+    }
+
+    public function data(OrderPaymentInterface $order)
+    {
+        $this->customerInfo = $order->getCutomerDetail();
+
+        $this->orderDetails = $order->getTransactionDetail();
+
+        $this->issuer = $order->getIssuer();
+
+        return $this;
+    }
+
+    public function type($type)
+    {
+        $this->paymentType = $type;
+
+        return $this;
     }
 
 }

@@ -27,10 +27,10 @@ class PaymentManager extends Manager
     public function createMidtransDriver()
     {
         $env = $this->app['config']['payment.env'] ?? false;
-        $serverKey = $this->app['config']['payment.env'] ?? '';
-        $clientKey = $this->app['config']['payment.env'] ?? '';
+        $serverKey = $this->app['config']['payment.midtrans.secret_key'] ?? '';
+        $clientKey = $this->app['config']['payment.midtrans.secret_key'] ?? '';
 
-        if(!$serverKey && !$clientKey)
+        if(!$serverKey or !$clientKey)
             throw new \InvalidArgumentException("Server key or client key is empty");
 
         return new MidtransManager($env, $serverKey, $clientKey);
@@ -44,7 +44,7 @@ class PaymentManager extends Manager
     public function createXenditDriver()
     {
         $env = $this->app['config']['payment.env'];
-        $secretKey = $this->app['config']['payment.secret_key'];
+        $secretKey = $this->app['config']['payment.xendit.secret_key'];
 
         if(!$secretKey)
             throw new \InvalidArgumentException("Secret key is empty");
