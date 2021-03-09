@@ -24,6 +24,11 @@ class MidtransManager extends PaymentAbstract implements PaymentInterface
         \Midtrans\Config::$isProduction = (bool) $env;
     }
 
+    public function getPaymentChannel($driver = 'midtrans')
+    {
+        return parent::getPaymentChannel($driver);
+    }
+
 
     public function setCustomerInfo($customerInfo): MidtransManager
     {

@@ -23,6 +23,11 @@ class XenditManager extends PaymentAbstract implements PaymentInterface
         Xendit::setApiKey($secretKey);
     }
 
+    public function getPaymentChannel($driver = 'xendit')
+    {
+        return parent::getPaymentChannel($driver);
+    }
+
     public function send($params = []): array
     {
 //        $orderDetail = $order->getTransactionDetail();
