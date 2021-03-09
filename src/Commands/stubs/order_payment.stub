@@ -41,7 +41,7 @@ trait OrderPayment
         {
             return array(
                 'order_id' => $this->order_code,
-                'gross_amount' => $this->grand_total, // no decimal allowed for creditcard
+                'gross_amount' => $this->grand_total,
             );
         }
 
