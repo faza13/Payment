@@ -19,7 +19,7 @@ trait OrderPayment
                 'last_name'     => $this->last_name,
                 'email'         => $this->email,
                 'phone'         => $this->ship_mobile,
-    //            'billing_address'  => array(),
+                'billing_address'  => array(),
                 'shipping_address' => $this->getShippingAddress()
             );
         }
