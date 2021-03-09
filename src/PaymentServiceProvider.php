@@ -17,7 +17,7 @@ class PaymentServiceProvider extends ServiceProvider
 
 
         $this->publishes([
-            __DIR__ . '/config/payment.php' => $this->app->basePath('config/payment.php'),
+            __DIR__ . '/../config/payment.php' => $this->app->basePath('config/payment.php'),
         ]);
 
         $this->app->bind('payment', PaymentInterface::class);
