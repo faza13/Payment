@@ -59,7 +59,7 @@ class PaymentManager extends Manager
 
     public function getPaymentChannel()
     {
-        $channel = collect($this->app['config']['payment.' . $this->getDrivers() . '.payment_type'])
+        $channel = collect($this->app['config']['payment.' . $this->driver() . '.payment_type'])
             ->map(function($value){
             $value = collect($value)->filter(function (&$value){
                 return $value['status'] == true;
