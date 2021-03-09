@@ -61,7 +61,7 @@ abstract class PaymentAbstract
     public function getPaymentChannel($driver)
     {
 
-        $channel = collect($this->app['config']['payment.' . $driver . '.payment_type'])
+        $channel = collect(config('payment.' . $driver . '.payment_type'))
             ->map(function($value){
                 $value = collect($value)->filter(function (&$value){
                     return $value['status'] == true;
