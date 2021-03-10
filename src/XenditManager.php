@@ -133,9 +133,12 @@ class XenditManager extends PaymentAbstract implements PaymentInterface
                 if(!$params['success_redirect_url'])
                     Throw new \InvalidArgumentException("success_redirect_url not set in params");
 
-                $xenditParams['channel_properties'] = [
-                    'success_redirect_url' => $params['success_redirect_url']
-                ];
+                if($params['success_redirect_url'])
+                {
+                    $xenditParams['channel_properties'] = [
+                        'success_redirect_url' => $params['success_redirect_url']
+                    ];
+                }
         }
 
         $result = EWallets::createEWalletCharge($xenditParams);

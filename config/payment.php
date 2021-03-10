@@ -10,40 +10,40 @@
             'payment_type' => [
                 'bank_transfer' => [
                     'bca' => [
-                        'title' => 'BCA',
+                        'label' => 'BCA',
                         'images' => [],
                         'status' => env('MINDTRANS_BCA', false),
                     ],
                     'mandiri' => [
-                        'title' => 'Bank Mandiri',
+                        'label' => 'Bank Mandiri',
                         'images' => [],
                         'status' => env('MINDTRANS_MANDIRI', false),
                     ],
                     'bni' => [
-                        'title' => 'BNI',
+                        'label' => 'BNI',
                         'images' => [],
                         'status' => env('MINDTRANS_BNI', false),
                     ],
                     'bri' => [
-                        'title' => 'BRI',
+                        'label' => 'BRI',
                         'images' => [],
                         'status' => env('MINDTRANS_BRI', false),
                     ],
                     'permata' => [
-                        'title' => 'PERMATA',
+                        'label' => 'PERMATA',
                         'images' => [],
                         'status' => env('MINDTRANS_PERMATA', false),
                     ]
                 ],
                 'ewallet' => [
                     'gopay' => [
-                        'title' => 'Gopay',
+                        'label' => 'Gopay',
                         'images' => [],
                         'status' => env('MINDTRANS_gopay', false),
                     ],
                 ],
                 'qris' => [
-                    'title' => 'QRIS',
+                    'label' => 'QRIS',
                     'images' => [],
                     'status' => env('MINDTRANS_QRIS', false),
                 ]
@@ -55,39 +55,39 @@
             'payment_type' => [
                 'bank_transfer' => [
                     'bca' => [
-                        'title' => 'BCA',
+                        'label' => 'BCA',
                         'images' => [],
                         'status' => env('XENDIT_BCA', false),
                     ],
                     'mandiri' => [
-                        'title' => 'Bank Mandiri',
+                        'label' => 'Bank Mandiri',
                         'images' => [],
                         'status' => env('XENDIT_MANDIRI', false),
                     ],
                     'bni' => [
-                        'title' => 'BNI',
+                        'label' => 'BNI',
                         'images' => [],
                         'status' => env('XENDIT_BNI', false),
                     ],
                     'bri' => [
-                        'title' => 'BRI',
+                        'label' => 'BRI',
                         'images' => [],
                         'status' => env('XENDIT_BRI', false),
                     ],
                     'permata' => [
-                        'title' => 'PERMATA',
+                        'label' => 'PERMATA',
                         'images' => [],
                         'status' => env('XENDIT_PERMATA', false),
                     ]
                 ],
                 'ewallet' => [
                     'ovo' => [
-                        'title' => '',
+                        'label' => 'OVO',
                         'images' => [],
                         'status' => env('XENDIT_OVO', false),
                     ],
                     'linkaja' => [
-                        'title' => '',
+                        'label' => '',
                         'images' => [],
                         'status' => env('XENDIT_LINKAJA', false),
                     ]
