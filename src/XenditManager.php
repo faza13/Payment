@@ -121,16 +121,16 @@ class XenditManager extends PaymentAbstract implements PaymentInterface
 //        dd($this->customerInfo);
         $mobile = str_replace("+", "", preg_replace('/^0|^62/', '', $this->customerInfo['phone']));
 
-        switch ($this->issuer)
+        switch (strtoupper($this->issuer))
         {
-            case 'ovo':
+            case 'OVO':
                 $xenditParams['channel_properties'] = [
                     'mobile_number' => "+62" . $mobile
                 ];
                 break;
             default:
 
-                if(!$params['success_redirect_url'])
+                if(!isset($params['success_redirect_url']))
                     Throw new \InvalidArgumentException("success_redirect_url not set in params");
 
                 if($params['success_redirect_url'])

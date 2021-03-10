@@ -56,4 +56,10 @@ class PaymentManager extends Manager
     {
         return $this->app['config']['payment.default'];
     }
+
+
+    public function getAllPaymentChannel()
+    {
+        dd($this->drivers);
+    }
 }
